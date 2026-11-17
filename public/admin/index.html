@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>PrimeX Admin</title>
+<link rel="icon" href="/img/favicon.png" type="image/png">
+<link rel="stylesheet" href="/css/site.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body class="admin">
+<div id="login" class="login" hidden>
+  <form id="loginForm" class="card login-card">
+    <img src="/img/emblem.png" alt="" width="56" height="52">
+    <h1>PrimeX Admin</h1>
+    <p class="muted">Sign in to see quote requests and manage the site.</p>
+    <label for="pw">Password</label>
+    <input id="pw" type="password" autocomplete="current-password" required>
+    <p class="form-error" id="loginErr" role="alert"></p>
+    <button class="btn btn-primary" type="submit">Sign in</button>
+  </form>
+</div>
+
+<div id="app" hidden>
+  <header class="a-head">
+    <div class="a-wrap">
+      <strong>PrimeX Admin</strong>
+      <nav class="a-tabs" role="tablist">
+        <button role="tab" data-tab="enquiries" aria-selected="true">Quote requests <span class="badge" id="newBadge" hidden></span></button>
+        <button role="tab" data-tab="projects" aria-selected="false">Projects</button>
+        <button role="tab" data-tab="settings" aria-selected="false">Contact details</button>
+      </nav>
+      <span class="spacer"></span>
+      <a class="btn btn-line btn-sm" href="/" target="_blank" rel="noopener">View site</a>
+      <button class="btn btn-line btn-sm" id="logout">Sign out</button>
+    </div>
+  </header>
+  <main class="a-wrap a-main">
+    <div id="banners"></div>
+
+    <section id="tab-enquiries">
+      <div class="a-bar">
+        <select id="fStatus" aria-label="Filter by status">
+          <option value="">All statuses</option><option value="new">New</option><option value="contacted">Contacted</option><option value="quoted">Quoted</option><option value="won">Won</option><option value="closed">Closed</option>
+        </select>
+        <input id="fSearch" type="search" placeholder="Search name, phone, city, message" aria-label="Search">
+        <span class="spacer"></span>
+        <a class="btn btn-line btn-sm" href="/api/admin/enquiries.csv">Download CSV</a>
+      </div>
+      <div id="enqList"></div>
+    </section>
+
+    <section id="tab-projects" hidden>
+      <div class="a-bar"><h2>Projects</h2><span class="spacer"></span><button class="btn btn-primary btn-sm" id="newProject">Add project</button></div>
+      <form id="projForm" class="card pform" hidden>
+        <h3 id="projFormTitle">Add project</h3>
+        <div class="grid2">
+          <div class="field"><label for="p-name">Project name *</label><input id="p-name" required maxlength="100"></div>
+          <div class="field"><label for="p-type">Type</label><select id="p-type"><option>High-rise</option><option>Mid-rise</option><option>Villas</option><option>Commercial</option><option>Other</option></select></div>
+          <div class="field"><label for="p-status">Status</label><select id="p-status"><option>Completed</option><option>Ongoing</option></select></div>
+          <div class="field"><label for="p-location">Location</label><input id="p-location" maxlength="100" placeholder="e.g. Whitefield, Bangalore"></div>
+          <div class="field"><label for="p-year">Year</label><input id="p-year" maxlength="12" placeholder="e.g. 2024"></div>
+          <div class="field"><label for="p-flats">Flats / units</label><input id="p-flats" maxlength="30" placeholder="e.g. 120"></div>
+        </div>
+        <div class="field"><label for="p-scope">What was supplied</label><input id="p-scope" maxlength="300" placeholder="e.g. Sliding windows and balcony doors for all flats"></div>
+        <div class="grid2">
+          <div class="field"><label for="p-image">Main photo (JPG, PNG or WebP, up to 6 MB)</label><input id="p-image" type="file" accept="image/jpeg,image/png,image/webp"></div>
+          <div class="field"><label for="p-image2">Second photo (optional)</label><input id="p-image2" type="file" accept="image/jpeg,image/png,image/webp"></div>
+        </div>
+        <label class="check"><input type="checkbox" id="p-rm2"> Remove the second photo</label>
+        <div class="grid2">
+          <div class="field"><label for="p-sort">Order (smaller shows first)</label><input id="p-sort" type="number" min="0" max="9999"></div>
+          <label class="check" style="align-self:end"><input type="checkbox" id="p-visible" checked> Show on website</label>
+        </div>
+        <p class="form-error" id="projErr" role="alert"></p>
+        <div class="actions"><button class="btn btn-primary" type="submit" id="projSave">Save project</button><button class="btn btn-line" type="button" id="projCancel">Cancel</button></div>
+      </form>
+      <div id="projList" class="plist"></div>
+    </section>
+
+    <section id="tab-settings" hidden>
+      <div class="a-bar"><h2>Contact details</h2></div>
+      <p class="muted" style="margin-bottom:16px">These appear in the website header, contact page, footer and the floating call and WhatsApp buttons. Anything left unchanged stays hidden from visitors.</p>
+      <form id="setForm" class="card pform">
+        <div class="grid2">
+          <div class="field"><label for="s-phone">Phone</label><input id="s-phone" maxlength="30" inputmode="tel"></div>
+          <div class="field"><label for="s-email">Email shown to visitors</label><input id="s-email" type="email" maxlength="120"></div>
+          <div class="field"><label for="s-whatsapp">WhatsApp number with country code, digits only</label><input id="s-whatsapp" maxlength="20" inputmode="numeric" placeholder="919845012345"></div>
+        </div>
+        <div class="field"><label for="s-address">Showroom and factory address</label><textarea id="s-address" rows="3" maxlength="300"></textarea></div>
+        <p class="form-error" id="setErr" role="alert"></p>
+        <div class="actions"><button class="btn btn-primary" type="submit">Save</button><button class="btn btn-line" type="button" id="backupBtn">Back up database now</button></div>
+        <p class="note">The server also backs up the database every day and keeps the last 14 copies.</p>
+      </form>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="/admin/admin.js"></script>
+</body>
+</html>
